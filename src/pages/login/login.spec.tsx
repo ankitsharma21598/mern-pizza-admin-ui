@@ -14,7 +14,7 @@ describe("Login", () => {
     const heading = screen.getByText("Sign in");
     const emailInput = screen.getByPlaceholderText("Username");
     const passwordInput = screen.getByPlaceholderText("Password");
-    const loginButton = screen.getByRole("button", { name: "Login" });
+    const loginButton = screen.getByRole("button", { name: /log in/i });
     const checkbox = screen.getByRole("checkbox", { name: "Remember me" });
     const forgotPasswordLink = screen.getByText("Forgot password?");
 

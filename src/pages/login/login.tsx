@@ -136,7 +136,7 @@ const LoginPage = () => {
                   <Checkbox>Remember me</Checkbox>
                 </Form.Item>
                 <a href="" id="login-form-forgot">
-                  Forgot password
+                  Forgot password?
                 </a>
               </Flex>
               <Form.Item>
