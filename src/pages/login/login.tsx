@@ -16,6 +16,7 @@ import type { Credentials } from "../../types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { login, logout, self } from "../../http/api";
 import { useAuthStore } from "../../store";
+import { usePermission } from "../../hooks/usePermission";
 // import { usePermission } from "../../hooks/usePermission";
 
 const loginUser = async (credentials: Credentials) => {
@@ -30,7 +31,7 @@ const getSelf = async () => {
 };
 
 const LoginPage = () => {
-  // const { isAllowed } = usePermission();
+  const { isAllowed } = usePermission();
   const { setUser, logout: logoutFromStore } = useAuthStore();
 
   const { refetch } = useQuery({
@@ -39,29 +40,29 @@ const LoginPage = () => {
     enabled: false,
   });
 
-  /* const { mutate: logoutMutate } = useMutation({
+  const { mutate: logoutMutate } = useMutation({
     mutationKey: ["logout"],
     mutationFn: logout,
     onSuccess: async () => {
       logoutFromStore();
       return;
     },
-  }); */
+  });
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationKey: ["login"],
     mutationFn: loginUser,
     onSuccess: async () => {
-      // getself
+      // get self data
       const selfDataPromise = await refetch();
       console.log({ selfDataPromise });
       // logout or redirect to client ui
       // window.location.href = "http://clientui/url"
       // "admin", "manager", "customer"
-      /* if (!isAllowed(selfDataPromise.data)) {
+      if (!isAllowed(selfDataPromise.data)) {
         logoutMutate();
         return;
-      } */
+      }
       setUser(selfDataPromise.data);
       console.log("login success");
     },
