@@ -12,30 +12,32 @@ import {
 import { LockFilled, UserOutlined, LockOutlined } from "@ant-design/icons";
 import Logo from "../../components/icons/Logo";
 // import { useMutation, useQuery } from "@tanstack/react-query";
-// import { Credentials } from "../../types";
-// import { login, self, logout } from "../../http/api";
+import type { Credentials } from "../../types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { login, self } from "../../http/api";
 // import { useAuthStore } from "../../store";
 // import { usePermission } from "../../hooks/usePermission";
 
-// const loginUser = async (credentials: Credentials) => {
-//   const { data } = await login(credentials);
-//   return data;
-// };
+const loginUser = async (credentials: Credentials) => {
+  console.log({ credentials });
+  const { data } = await login(credentials);
+  return data;
+};
 
-// const getSelf = async () => {
-//   const { data } = await self();
-//   return data;
-// };
+const getSelf = async () => {
+  const { data } = await self();
+  return data;
+};
 
 const LoginPage = () => {
   // const { isAllowed } = usePermission();
   // const { setUser, logout: logoutFromStore } = useAuthStore();
 
-  // const { refetch } = useQuery({
-  //   queryKey: ["self"],
-  //   queryFn: getSelf,
-  //   enabled: false,
-  // });
+  const { refetch } = useQuery({
+    queryKey: ["self"],
+    queryFn: getSelf,
+    enabled: false,
+  });
 
   // const { mutate: logoutMutate } = useMutation({
   //   mutationKey: ["logout"],
@@ -46,21 +48,24 @@ const LoginPage = () => {
   //   },
   // });
 
-  // const { mutate, isPending, isError, error } = useMutation({
-  //   mutationKey: ["login"],
-  //   mutationFn: loginUser,
-  //   onSuccess: async () => {
-  //     const selfDataPromise = await refetch();
-  //     // logout or redirect to client ui
-  //     // window.location.href = "http://clientui/url"
-  //     // "admin", "manager", "customer"
-  //     if (!isAllowed(selfDataPromise.data)) {
-  //       logoutMutate();
-  //       return;
-  //     }
-  //     setUser(selfDataPromise.data);
-  //   },
-  // });
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: loginUser,
+    onSuccess: async () => {
+      // getself
+      const selfDataPromise = await refetch();
+      console.log({ selfDataPromise });
+      // logout or redirect to client ui
+      // window.location.href = "http://clientui/url"
+      // "admin", "manager", "customer"
+      /* if (!isAllowed(selfDataPromise.data)) {
+        logoutMutate();
+        return;
+      }
+      setUser(selfDataPromise.data); */
+      console.log("login success");
+    },
+  });
 
   return (
     <>
@@ -98,10 +103,17 @@ const LoginPage = () => {
                 remember: true,
               }}
               onFinish={(values) => {
-                // mutate({ email: values.username, password: values.password });
-                console.log(values);
+                mutate({ email: values.username, password: values.password });
+                // console.log({ values });
               }}
             >
+              {isError && (
+                <Alert
+                  style={{ marginBottom: 24 }}
+                  type="error"
+                  message={error?.message}
+                />
+              )}
               <Form.Item
                 name="username"
                 rules={[
@@ -144,6 +156,7 @@ const LoginPage = () => {
                   type="primary"
                   htmlType="submit"
                   style={{ width: "100%" }}
+                  loading={isPending}
                 >
                   Log in
                 </Button>
