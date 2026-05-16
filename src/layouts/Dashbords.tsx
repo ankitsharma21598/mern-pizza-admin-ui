@@ -18,8 +18,7 @@ import UserIcon from "../components/icons/UserIcon";
 import { foodIcon } from "../components/icons/FoodIcon";
 import BasketIcon from "../components/icons/BasketIcon";
 import GiftIcon from "../components/icons/GiftIcon";
-import { useMutation } from "@tanstack/react-query";
-import { logout } from "../http/api";
+import useLogout from "../hooks/useLogout";
 
 const { Sider, Header, Content, Footer } = Layout;
 
@@ -69,16 +68,7 @@ const getMenuItems = (role: string) => {
 
 const Dashboard = () => {
   const location = useLocation();
-  const { logout: logoutFromStore } = useAuthStore();
-
-  const { mutate: logoutMutate } = useMutation({
-    mutationKey: ["logout"],
-    mutationFn: logout,
-    onSuccess: async () => {
-      logoutFromStore();
-      return;
-    },
-  });
+  const { logoutMutate } = useLogout();
 
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -106,7 +96,6 @@ const Dashboard = () => {
           theme="light"
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
-          
         >
           <div className="logo">
             <Logo />
@@ -156,7 +145,7 @@ const Dashboard = () => {
                       color: "#f56a00",
                     }}
                   >
-                    U
+                    {user.name[0]}
                   </Avatar>
                 </Dropdown>
               </Space>
