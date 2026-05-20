@@ -6,16 +6,14 @@ export type Credentials = {
 export type User = {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   createdAt: string;
   tenant: Tenant | null;
 };
 
 export type CreateUserData = {
   email: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   password: string;
   role: string;
   tenantId: number;
@@ -35,6 +33,11 @@ export type FieldData = {
 export type CreateTenantData = {
   name: string;
   address: string;
+};
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  total: number;
 };
 
 export interface PriceConfiguration {
@@ -119,8 +122,7 @@ export interface CartItem extends Pick<
 
 export interface Customer {
   _id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
 }
 // export interface Order {
 //   _id: string;
