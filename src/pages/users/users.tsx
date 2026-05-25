@@ -116,21 +116,19 @@ const Users = () => {
 
   const { mutate: userMutate } = useMutation({
     mutationKey: ["user"],
-    mutationFn: async (data: CreateUserData) =>
+    mutationFn: (data: CreateUserData) =>
       createUser(data).then((res) => res.data),
-    onSuccess: async () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      return;
     },
   });
 
   const { mutate: updateUserMutation } = useMutation({
     mutationKey: ["update-user"],
-    mutationFn: async (data: CreateUserData) =>
+    mutationFn: (data: CreateUserData) =>
       updateUser(data, Number(currentEditingUser!.id)).then((res) => res.data),
-    onSuccess: async () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      return;
     },
   });
 
@@ -138,9 +136,9 @@ const Users = () => {
     await form.validateFields();
     const isEditMode = !!currentEditingUser;
     if (isEditMode) {
-      await updateUserMutation(form.getFieldsValue());
+      updateUserMutation(form.getFieldsValue());
     } else {
-      await userMutate(form.getFieldsValue());
+      userMutate(form.getFieldsValue());
     }
     form.resetFields();
     setCurrentEditingUser(null);
@@ -229,14 +227,13 @@ const Users = () => {
               },
             },
           ]}
-          dataSource={users}
+          dataSource={users?.data}
           rowKey={"id"}
           pagination={{
             total: users?.total,
             pageSize: queryParams.perPage,
             current: queryParams.currentPage,
             onChange: (page) => {
-              console.log(page);
               setQueryParams((prev) => {
                 return {
                   ...prev,
@@ -244,8 +241,8 @@ const Users = () => {
                 };
               });
             },
+
             showTotal: (total: number, range: number[]) => {
-              console.log(total, range);
               return `Showing ${range[0]}-${range[1]} of ${total} items`;
             },
           }}
