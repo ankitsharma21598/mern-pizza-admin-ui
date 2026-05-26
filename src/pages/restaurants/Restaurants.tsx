@@ -238,7 +238,7 @@ const Restaurants = () => {
             },
           },
         ]}
-        dataSource={tenants}
+        dataSource={tenants?.data}
         rowKey="id"
         pagination={{
           total: tenants?.total,
